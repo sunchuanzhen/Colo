@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Wongzigii. All rights reserved.
 //
 
-
 #import "ColorCell.h"
 #import "ColorManagerObject.h"
 #import "ColorModel.h"
 #import "Parser.h"
+#import "SWTableViewCell.h"
 
 @interface ColorCell()
 
@@ -178,11 +178,16 @@
 //    self.title.text = model.title;
     //self.favourites.text = model.stars;
     
-    self.firstColor.backgroundColor  = [UIColor translateWithHexString:[model.colorArray objectAtIndex:0]];
-    self.secondColor.backgroundColor = [UIColor translateWithHexString:[model.colorArray objectAtIndex:1]];
-    self.thirdColor.backgroundColor  = [UIColor translateWithHexString:[model.colorArray objectAtIndex:2]];
-    self.fourthColor.backgroundColor = [UIColor translateWithHexString:[model.colorArray objectAtIndex:3]];
-    self.fifthColor.backgroundColor  = [UIColor translateWithHexString:[model.colorArray objectAtIndex:4]];
+//    self.firstColor.backgroundColor  = [UIColor translateWithHexString:[model.colorArray objectAtIndex:0]];
+//    self.secondColor.backgroundColor = [UIColor translateWithHexString:[model.colorArray objectAtIndex:1]];
+//    self.thirdColor.backgroundColor  = [UIColor translateWithHexString:[model.colorArray objectAtIndex:2]];
+//    self.fourthColor.backgroundColor = [UIColor translateWithHexString:[model.colorArray objectAtIndex:3]];
+//    self.fifthColor.backgroundColor  = [UIColor translateWithHexString:[model.colorArray objectAtIndex:4]];
+    self.firstColor.backgroundColor = [UIColor orangeColor];
+    self.secondColor.backgroundColor = [UIColor orangeColor];
+    self.thirdColor.backgroundColor = [UIColor orangeColor];
+    self.fourthColor.backgroundColor = [UIColor orangeColor];
+    self.fifthColor.backgroundColor = [UIColor orangeColor];
 }
 
 //For CoreData

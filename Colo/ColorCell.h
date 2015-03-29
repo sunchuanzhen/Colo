@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ColorModel.h"
+#import "SWTableViewCell.h"
 
-@interface ColorCell : UITableViewCell
+@interface ColorCell : SWTableViewCell
 
 @property (strong, nonatomic)   UIView *firstColor;
 @property (strong, nonatomic)   UIView *secondColor;

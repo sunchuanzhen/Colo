@@ -23,11 +23,13 @@
 #import "SimpleGetHTTPRequest.h"
 #import "MenuView.h"
 #import "MBProgressHUD.h"
+#import "SWTableViewCell.h"
+#import "FavouriteViewController.h"
 
 static NSString *JSHandler;
 static NSString *CellIdentifier = @"ColorCell";
 
-@interface CollectionViewController ()<UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate, ModalViewControllerDelegate, MenuViewControllerDelegate>
+@interface CollectionViewController ()<UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate, ModalViewControllerDelegate, MenuViewControllerDelegate, SWTableViewCellDelegate>
 
 @property (strong, nonatomic) UITableView    *tableView;
 @property (strong, nonatomic) UIView         *bottomView;
@@ -49,6 +51,7 @@ static NSString *CellIdentifier = @"ColorCell";
 
 @implementation CollectionViewController
 
+#pragma mark - Memory Warning
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     if ([self isViewLoaded] && (self.view.window == nil)) {
@@ -58,8 +61,6 @@ static NSString *CellIdentifier = @"ColorCell";
         _filePath = nil;
         _menuView = nil;
     }
-   
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - LifeCycle
@@ -97,9 +98,9 @@ static NSString *CellIdentifier = @"ColorCell";
 - (void)viewDidAppear:(BOOL)animated
 {
     [self fetchDataFromServer];
-
 }
 
+#pragma mark - Private Methods
 - (void)fetchDataFromServer
 {
     NSFileManager *manager = [[NSFileManager alloc] init];
@@ -180,7 +181,7 @@ static NSString *CellIdentifier = @"ColorCell";
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[ColorCell class] forCellReuseIdentifier:CellIdentifier];
-    [self.view       addSubview:self.tableView];
+    [self.view addSubview:self.tableView];
     
     _menuView = [[MenuView alloc] initWithFrame:CGRectMake(0, kDeviceHeight - 49, kDeviceWidth, kDeviceHeight / 2)];
     self.menuView.delegate = self;
@@ -199,7 +200,7 @@ static NSString *CellIdentifier = @"ColorCell";
     
     self.chooseButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.chooseButton setImage:[UIImage imageNamed:@"star.png"] forState:UIControlStateNormal];
-    [self.chooseButton addTarget:self action:@selector(showFavouriteTable)
+    [self.chooseButton addTarget:self action:@selector(switchToFavouriteTable)
                 forControlEvents:UIControlEventTouchUpInside];
     
     [self.bottomView addSubview:self.settingsButton];
@@ -212,9 +213,10 @@ static NSString *CellIdentifier = @"ColorCell";
     [self.menuView handleHideOrShow];
 }
 
-- (void)showFavouriteTable
+- (void)switchToFavouriteTable
 {
-    //TODO
+    FavouriteViewController *vc = [[FavouriteViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)fetchDataFromCoreData
@@ -422,6 +424,8 @@ static NSString *CellIdentifier = @"ColorCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ColorCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    [cell setRightUtilityButtons:[self rightButtons] WithButtonWidth:58.0f];
+    cell.delegate = self;
     
     //http://objccn.io/issue-1-2/#separatingconcerns
     [cell configureForColor:[self.objects objectAtIndex:indexPath.row]];
@@ -473,6 +477,71 @@ static NSString *CellIdentifier = @"ColorCell";
     }else{
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     }
+}
+
+#pragma mark - MiniColorCell Utility
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                                                title:@"More"];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                                title:@"Delete"];
+    
+    return rightUtilityButtons;
+}
+
+#pragma mark - SWTableViewDelegate
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+        {
+            NSLog(@"More button was pressed");
+            UIAlertView *alertTest = [[UIAlertView alloc] initWithTitle:@"Hello" message:@"More more more" delegate:nil cancelButtonTitle:@"cancel" otherButtonTitles: nil];
+            [alertTest show];
+            
+            [cell hideUtilityButtonsAnimated:YES];
+            break;
+        }
+        case 1:
+        {
+            // Delete button was pressed
+            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+            
+            //[_testArray[cellIndexPath.section] removeObjectAtIndex:cellIndexPath.row];
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell
+{
+    // allow just one cell's utility button to be open at once
+    return YES;
+}
+
+- (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state
+{
+    switch (state) {
+        case 1:
+            // set to NO to disable all left utility buttons appearing
+            return YES;
+            break;
+        case 2:
+            // set to NO to disable all right utility buttons appearing
+            return YES;
+            break;
+        default:
+            break;
+    }
+    
+    return YES;
 }
 
 @end
