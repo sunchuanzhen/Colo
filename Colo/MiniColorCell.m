@@ -1,21 +1,21 @@
 //
-//  MinColorsCell.m
+//  MiniColorCell.m
 //  Colo
 //
 //  Created by Wongzigii on 15/3/7.
 //  Copyright (c) 2015年 Wongzigii. All rights reserved.
 //
 
-#import "MinColorsCell.h"
+#import "MiniColorCell.h"
 #import "ColorManagerObject.h"
 #import "ColorModel.h"
 #import "Parser.h"
 
-@interface MinColorsCell ()
+@interface MiniColorCell ()
 @property (nonatomic, assign) BOOL didSetupConstraints;
 @end
 
-@implementation MinColorsCell
+@implementation MiniColorCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -45,7 +45,6 @@
         [self.background        addSubview:self.thirdColor];
         [self.background        addSubview:self.fourthColor];
         [self.background        addSubview:self.fifthColor];
-        
     }
     return self;
 }
@@ -61,7 +60,7 @@
         NSArray *constraintsArray;
         //NSDictionary *metrics = @{@"topHeight":@100.0, @"bottomHeight":@50};
         
-        format = @"V:[_background(25)]";
+        format = @"V:[_background(20)]";
         constraintsArray = [NSLayoutConstraint constraintsWithVisualFormat:format options:NSLayoutFormatAlignAllCenterY metrics:nil views:viewsDictionary];
         [self.contentView addConstraints:constraintsArray];
         
@@ -70,20 +69,20 @@
         [self.contentView addConstraints:constraintsArray];
         
         [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.background
-                                                            attribute:NSLayoutAttributeCenterY
-                                                            relatedBy:NSLayoutRelationEqual
-                                                               toItem:self.contentView
-                                                            attribute:NSLayoutAttributeCenterY
-                                                           multiplier:1.0f
-                                                             constant:0.0f]];
+                                                                     attribute:NSLayoutAttributeCenterY
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:self.contentView
+                                                                     attribute:NSLayoutAttributeCenterY
+                                                                    multiplier:1.0f
+                                                                      constant:0.0f]];
         
         [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.background
-                                                                    attribute:NSLayoutAttributeCenterX
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.contentView
-                                                                    attribute:NSLayoutAttributeCenterX
-                                                                   multiplier:1.0f
-                                                                     constant:0.0f]];
+                                                                     attribute:NSLayoutAttributeCenterX
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:self.contentView
+                                                                     attribute:NSLayoutAttributeCenterX
+                                                                    multiplier:1.0f
+                                                                      constant:0.0f]];
                                 
         //Top
         format = @"H:|[_firstColor][_secondColor(==_firstColor)][_thirdColor(==_firstColor)][_fourthColor(==_firstColor)][_fifthColor(==_firstColor)]|";
